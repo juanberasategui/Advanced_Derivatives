@@ -23,13 +23,13 @@ BSMval = BSM(S0, r, σ, T, K)
 CI_check = function(number){
   indicator_count = 0
   for (i in 1:number){
-    X = rnorm(N)
-    ST = S0*exp((r-0.5*σ^2)*T+σ*sqrt(T)*X)
-    CT = as.vector(pmax(ST-K,0))
+    X = rnorm(N) #generate random numbers from N(0,1)
+    ST = S0*exp((r-0.5*σ^2)*T+σ*sqrt(T)*X) #stock price
+    CT = as.vector(pmax(ST-K,0)) #vector of options payoffs
     BSMmc = A*mean(CT)
-    sdBSMmc = sd(CT*A )/sqrt(N)
-    uci = BSMmc + 1.96*sdBSMmc
-    lci = BSMmc - 1.96*sdBSMmc
+    sdBSMmc = sd(CT*A )/sqrt(N) #standard error
+    uci = BSMmc + 1.96*sdBSMmc #upper confidence interval
+    lci = BSMmc - 1.96*sdBSMmc #lower confidence interval
     indicator = ifelse(BSMval >= lci & BSMval <= uci, 1, 0)
     indicator_count = indicator_count + indicator
   }
@@ -41,7 +41,7 @@ aCI_check = function(number){
   indicator_count = 0
   for (i in 1:number){
     X = rnorm(N)
-    aX= as.vector(-X)
+    aX= as.vector(-X) #antithetic variates from X
     aST = S0*exp((r-0.5*σ^2)*T+σ*sqrt(T)*aX)
     aCT = as.vector(pmax(aST-K,0))
     aBSMmc = A*mean(aCT)
@@ -71,7 +71,7 @@ avCI_check = function(number){
     #Calculate the antithetic variates payoff estimate
     CTav = (CT+aCT)/2
     #Calculate the antithetic variates standard error
-    sdBSMav = sd(CTav*A)/sqrt(N); sdBSMav
+    sdBSMav = sd(CTav*A)/sqrt(N)
     avuci = BSMav + 1.96*sdBSMav
     avlci = BSMav - 1.96*sdBSMav
 
